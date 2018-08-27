@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<style>
+    * {
+        font-family: "Microsoft YaHei";
+    }
+
+    .table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+        vertical-align: middle;
+        text-align: left;
+
+        overflow: hidden;
+
+    }
+
+    #sidebar > li:hover > a {
+
+        background: white;
+
+    }
+
+    .content {
+
+        padding: 0;
+
+    }
+
+
+</style>
+{% end %}
+
+{% block content %}
+{% include 'grid.html' %}
+
+
+<div class="row">
+
+    <div class="form-group has-success col-lg-6">
+        <label class="control-label" for="inputSuccess"><i class="fa fa-pencil"></i> 请输入指令</label>
+
+        <div class="form-group">
+
+            <textarea class="form-control input_text" rows="5" name="song_detail" placeholder="Enter ..."></textarea>
+            <br>
+
+
+        </div>
+
+        <span class="help-block"></span>
+
+        <button class="btn btn-success submit_button">提交</button>
+        <br>
+    </div>
+
+    <div class="form-group has-success col-lg-6">
+
+
+        <label class="control-label" for="inputSuccess"> 识别结果</label>
+
+
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+
+
+            {% for index,name in items.items() %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading {{ name[0] }}" role="tab" id="heading{{ index }}">
+                    <h4 class="panel-title">
+
+                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion"
+                           href="#collapse{{ index }}"
+                           aria-expanded="false" aria-controls="collapse{{ index }}">
+                            {{ name[1] }}
+                        </a>
+
+                    </h4>
+                </div>
+                <div id="collapse{{ index }}" class="panel-collapse collapse" role="tabpanel"
+                     aria-labelledby="heading{{ index }}">
+                    <div class="panel-body  {{ name[0] }}">
+
+                    </div>
+                </div>
+            </div>
+
+
+            {% end %}
+
+
+        </div>
+
+
+    </div>
+
+
+{#        <div class="box box-success col-lg-12">#}
+{#                <div class="box-header with-border">#}
+{#                  <h3 class="box-title">音乐指令分词结果</h3>#}
+{##}
+{#                  <div class="box-tools pull-right">#}
+{#                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>#}
+{#                    </button>#}
+{#                    <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>#}
+{#                  </div>#}
+{#                </div>#}
+{#                <div class="box-body">#}
+{#                  <div class="chart">#}
+{#                 <canvas id="myChart" height="100" width="500" ></canvas>#}
+{#                  </div>#}
+{#                </div>#}
+{#                <!-- /.box-body -->#}
+{#              </div>#}
+
+
+
+</div>
+
+
+{#</div>#}
+
+
+{% end %}
+
+
+{% block js %}
+
+<script>
+    $('.submit_button').click(function () {
+
+
+
+        // var text = ;
+
+
+        $.post('http://10.127.197.120:8000/genre/query/ ', {'query': $('.input_text').val()}, function (data) {
+
+            var result = data['result'];
+            $('.panel-body').empty()
+            $('.panel-heading').removeClass('active');
+
+            for (x in result.splice(1)) {
+                console.log(result);
+                // if (result[x][0]=''){}
+
+                $('.' + result[x][0]).addClass('active');
+                {#                        $('.panel-body').empty()#}
+                $('.panel-body.' + result[x][0]).append(result[x][1])
+
+
+            }
+
+
+            var words = data['words'];
+
+            var ctx = document.getElementById("myChart");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: words,
+                    datasets: [{
+                        label: '匹配度',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+
+
+            {#        var lineChartData = {#}
+            {#labels : words,#}
+            {#datasets : [#}
+            {#	{#}
+            {#		fillColor : "#6699FF", // //背景填充色#}
+            {#		strokeColor : "rgba(220,220,220,1)", //路径颜色#}
+            {#		pointColor : "rgba(220,220,220,1)", // 数据点颜色#}
+            {#		pointStrokeColor : "#fff",  // 数据边框颜色#}
+            {#        data: [0.1,0.2,0.3,0.3,0.1]#}
+            {#	}#}
+            {##}
+            {#]#}
+            {##}
+            {#
+            {#var defaults = {#}
+            {#	//网格线是否在数据线的上面#}
+            {#	scaleOverlay : false,#}
+            {##}
+            {#	//是否用硬编码重写y轴网格线#}
+            {#	scaleOverride : false,#}
+            {##}
+            {#	//** Required if scaleOverride is true **#}
+            {#	//y轴刻度的个数#}
+            {#	scaleSteps : null,#}
+            {##}
+            {#	//y轴每个刻度的宽度#}
+            {#	scaleStepWidth : 20,#}
+            {##}
+            {#	// Y 轴的起始值#}
+            {#	scaleStartValue : null,#}
+            {#	// Y/X轴的颜色#}
+            {#	scaleLineColor: "rgba(0,0,0,.1)",#}
+            {#	// X,Y轴的宽度#}
+            {#	scaleLineWidth: 1,#}
+            {#	// 刻度是否显示标签, 即Y轴上是否显示文字#}
+            {#	scaleShowLabels: false,#}
+            {#	// Y轴上的刻度,即文字#}
+            {#	scaleLabel: "<%=value%>",#}
+            {#	// 字体#}
+            {#	scaleFontFamily: "'Arial'",#}
+            {#	// 文字大小#}
+            {#	scaleFontSize: 16,#}
+            {#	// 文字样式#}
+            {#	scaleFontStyle: "normal",#}
+            {#	// 文字颜色#}
+            {#	scaleFontColor: "rgb(0,0,0)",#}
+            {#	// 是否显示网格#}
+            {#	scaleShowGridLines: true,#}
+            {#	// 网格颜色#}
+            {#	scaleGridLineColor: "rgba(0,0,0,.05)",#}
+            {#	// 网格宽度#}
+            {#	scaleGridLineWidth:2,#}
+            {#	// 是否使用贝塞尔曲线? 即:线条是否弯曲#}
+            {#	bezierCurve: true,#}
+            {#	// 是否显示点数#}
+            {#	pointDot: true,#}
+            {#	// 圆点的大小#}
+            {#	pointDotRadius:5,#}
+            {#	// 圆点的笔触宽度, 即:圆点外层白色大小#}
+            {#	pointDotStrokeWidth: 2,#}
+            {#	// 数据集行程(连线路径)#}
+            {#	datasetStroke: true,#}
+            {#	// 线条的宽度, 即:数据集#}
+            {#	datasetStrokeWidth: 2,#}
+            {#	// 是否填充数据集#}
+            {#	datasetFill: true,#}
+            {#	// 是否执行动画#}
+            {#	animation: true,#}
+            {#	// 动画的时间#}
+            {#	animationSteps: 60,#}
+            {#	// 动画的特效#}
+            {#	animationEasing: "easeOutQuart",#}
+            {#	// 动画完成时的执行函数#}
+            {#	//onAnimationComplete: null#}
+            {#
+
+
+
+
+
+
+            {#var myLine = new Chart(document.getElementById("canvas").getContext("2d")).Bar(lineChartData,defaults);#}
+
+            {#myLine.destroy();#}
+
+
+        })
+
+
+    })
+
+
+</script>
+
+
+{% end %}
+
+
+

@@ -1,0 +1,83 @@
+<form action="{{ static_for('admin.capital',page=1) }}" method="post">
+
+
+    <div class="search_bar row">
+
+        <div class="show-level col-lg-2 col-md-2 col-xs-12">
+
+            <a class="btn btn-app ">
+
+                <b>Num:{{ title}}</b>
+
+
+            </a>
+
+
+        </div>
+
+        <div class="col-lg-2 col-md-2 col-xs-6">
+
+
+            <div class="Level_from">
+                <label for="daterangepicker_start">From</label><br>
+                <input class="from" type="text" name="start" value="" placeholder="{{ start }}">
+
+
+            </div>
+
+
+            <div class="Level_to">
+                <label for="daterangepicker_start">To</label><br>
+                <input class="to" type="text" name="end" value="" placeholder="{{ end }}">
+
+            </div>
+
+
+        </div>
+
+        {#                            ---------------------name-------------------#}
+
+        <div class="Name col-lg-2 col-md-2 col-xs-6">
+            <label for="daterangepicker_start">Name:</label><br>
+            <input class="NameInput" type="text" name="name" value="">
+
+
+        </div>
+
+        {#                            --------------------------check-------------------------#}
+
+        <div class="dot-check form-group col-lg-2 col-md-2 col-xs-6">
+
+
+            <label for="">0 <br> <input type="checkbox" name="check" value="0" ></label>
+            <label for="">1 <br> <input type="checkbox" name="check" value="1"></label>
+            <label for="">M <br> <input type="checkbox" name="check" value="2"></label>
+            <label for="">F<br> <input type="checkbox" name="check" value="3"></label>
+
+        </div>
+
+
+        {#                            ------------------------match----------------------#}
+
+
+        <div class="mathch col-lg-2 col-md-2 col-xs-6">
+            <label for="daterangepicker_start">Match</label><br>
+            <input class="from" type="text" name="match" value="" placeholder="{{ match }}">
+
+
+        </div>
+
+
+        {#                            --------------------------------submit----------------------------#}
+
+
+        <div class="submit col-lg-2 col-md-2 col-xs-12">
+
+            <button class="btn btn-primary" type="submit">submit</button>
+        </div>
+
+
+    </div>
+
+
+</form>
